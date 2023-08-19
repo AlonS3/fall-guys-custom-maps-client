@@ -1,18 +1,18 @@
-import React, { useCallback, memo } from "react";
+import React, { useCallback, memo } from "react"
 
-import { Button, HStack, Text } from "@chakra-ui/react";
-import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import { Button, HStack, Text } from "@chakra-ui/react"
+import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons"
 
 const PagesNavigation = ({ pageNumber, setPageNumber, totalPages, hasNextPage }) => {
   const handleNextPage = useCallback(() => {
-    setPageNumber(parseInt(pageNumber) + 1);
-  }, [setPageNumber, pageNumber]);
+    setPageNumber(parseInt(pageNumber) + 1)
+  }, [setPageNumber, pageNumber])
 
   const handlePreviousPage = useCallback(() => {
-    if (pageNumber>1){
-      setPageNumber(parseInt(pageNumber) - 1);
+    if (pageNumber > 1) {
+      setPageNumber(parseInt(pageNumber) - 1)
     }
-  }, [setPageNumber, pageNumber]);
+  }, [setPageNumber, pageNumber])
 
   return (
     <HStack justifyContent="center">
@@ -23,10 +23,13 @@ const PagesNavigation = ({ pageNumber, setPageNumber, totalPages, hasNextPage })
         variant="ghost"
         size="sm"
         isDisabled={pageNumber <= 1}
+        _disabled={{ opacity: 0.4, cursor: "default" }}
       >
         Previous Page
       </Button>
-      <Text>{pageNumber}/{totalPages}</Text>
+      <Text>
+        {pageNumber}/{totalPages}
+      </Text>
       <Button
         onClick={handleNextPage}
         rightIcon={<ArrowForwardIcon />}
@@ -34,11 +37,12 @@ const PagesNavigation = ({ pageNumber, setPageNumber, totalPages, hasNextPage })
         variant="ghost"
         size="sm"
         isDisabled={!hasNextPage}
+        _disabled={{ opacity: 0.4, cursor: "default" }}
       >
         Next Page
       </Button>
     </HStack>
-  );
-};
+  )
+}
 
-export default memo(PagesNavigation);
+export default memo(PagesNavigation)
