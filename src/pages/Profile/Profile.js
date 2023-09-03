@@ -3,6 +3,7 @@ import React from "react"
 import { Container, Heading } from "@chakra-ui/react"
 
 import ProfileInformationSection from "./components/ProfileInformationSection"
+import UserMaps from "./components/UserMaps"
 
 const Profile = () => {
   return (
@@ -14,7 +15,7 @@ const Profile = () => {
       <Heading size={"lg"} fontWeight={"bold"} mt={10}>
         Your Maps:
       </Heading>
-
+      <UserMaps />
       <Heading size={"lg"} fontWeight={"bold"} mt={10}>
         Liked Maps:
       </Heading>

@@ -113,3 +113,8 @@ export const addMap = async (formData) => {
   })
   return response.data
 }
+
+export const getUserMaps = async (userId) => {
+  const response = await backendApi.get(`/api/public/user/${userId}`)
+  return response.data
+}
