@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom"
 import { BiSolidCrown, BiCrown } from "react-icons/bi"
 import { Button, Icon, Box, useStyleConfig } from "@chakra-ui/react"
 
-import { AuthContext } from "../../../../../shared/context/authContext"
+import { AuthContext } from "../../../context/authContext"
 
 import { useMutation } from "react-query"
-import { likeMap } from "../../../../../api/backendApi"
+import { likeMap } from "../../../../api/backendApi"
 
 const LikeButton = ({ map, setLikesCounter }) => {
   const auth = useContext(AuthContext)
