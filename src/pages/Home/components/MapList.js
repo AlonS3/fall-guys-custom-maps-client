@@ -11,12 +11,12 @@ import { SimpleGrid, Box, Container, useColorModeValue } from "@chakra-ui/react"
 import PagesNavigation from "./PagesNavigation"
 
 const MapList = ({ query, sortByOption, setSortByOption, mapCategory, pageNumber, searchTrigger, setPageNumber }) => {
-  const params = { mapCategory, sortByOption, pageNumber, query }
+  const updatedParams = { mapCategory, sortByOption, pageNumber, query }
   // debounced params state
-  const [newParams, setNewParams] = useState(params)
+  const [currentParams, setCurrentParams] = useState(updatedParams)
 
   const { isLoading, isError, isSuccess, data } = useQuery(
-    ["maps", newParams],
+    ["maps", currentParams],
     ({ signal }) => getMaps(signal, mapCategory, sortByOption, pageNumber, query),
     {
       staleTime: 1000 * 60 * 2,
@@ -25,11 +25,11 @@ const MapList = ({ query, sortByOption, setSortByOption, mapCategory, pageNumber
 
   // debouncing the params
   useEffect(() => {
-    if (JSON.stringify(params) !== JSON.stringify(newParams)) {
-      const timerId = setTimeout(() => setNewParams(params), 1000)
+    if (JSON.stringify(updatedParams) !== JSON.stringify(currentParams)) {
+      const timerId = setTimeout(() => setCurrentParams(updatedParams), 1000)
       return () => clearTimeout(timerId)
     }
-  }, [params])
+  }, [updatedParams])
 
   return (
     <Box
