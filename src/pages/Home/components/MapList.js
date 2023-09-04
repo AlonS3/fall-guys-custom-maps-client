@@ -8,7 +8,7 @@ import { getMaps } from "../../../api/backendApi"
 
 import { SimpleGrid, Box, Container, useColorModeValue } from "@chakra-ui/react"
 
-import PagesNavigation from "./PagesNavigation"
+import PagesNavigation from "../../../shared/components/PagesNavigation"
 
 const MapList = ({ query, sortByOption, setSortByOption, mapCategory, pageNumber, searchTrigger, setPageNumber }) => {
   const updatedParams = { mapCategory, sortByOption, pageNumber, query }

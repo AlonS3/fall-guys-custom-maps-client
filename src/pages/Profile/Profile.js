@@ -9,11 +9,11 @@ const Profile = () => {
   return (
     <Container maxWidth={"container.xl"}>
       <Heading size={"lg"} fontWeight={"bold"} mt={10}>
-        Your Profile:
+        My Profile:
       </Heading>
       <ProfileInformationSection />
       <Heading size={"lg"} fontWeight={"bold"} mt={10}>
-        Your Maps:
+        My Maps:
       </Heading>
       <UserMaps />
       <Heading size={"lg"} fontWeight={"bold"} mt={10}>

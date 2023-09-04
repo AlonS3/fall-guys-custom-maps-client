@@ -115,6 +115,8 @@ export const addMap = async (formData) => {
 }
 
 export const getUserMaps = async (userId) => {
-  const response = await backendApi.get(`/api/public/user/${userId}`)
+  const response = await backendApi.get(`/api/public/user/${userId}`, {
+    withCredentials: true,
+  })
   return response.data
 }
