@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react"
 import { useQuery } from "react-query"
 
 import MapItem from "../../../shared/components/MapItem/MapItem"
-import SortRadioButton from "./SortRadioButtonGroup"
+import SortRadioButton from "../../../shared/components/SortRadioButton"
+import SearchSection from "../components/SearchSection"
+import CategoriesBar from "./CategoriesBar"
 
 import { getMaps } from "../../../api/backendApi"
 
-import { SimpleGrid, Box, Container, useColorModeValue } from "@chakra-ui/react"
+import { SimpleGrid, Box, Container, Skeleton, Flex } from "@chakra-ui/react"
 
 import PagesNavigation from "../../../shared/components/PagesNavigation"
 
-const MapList = ({ query, sortByOption, setSortByOption, mapCategory, pageNumber, searchTrigger, setPageNumber }) => {
+const MapList = ({ query, setQuery, handleChooseCategory, sortByOption, setSortByOption, mapCategory, pageNumber, searchTrigger, setPageNumber }) => {
   const updatedParams = { mapCategory, sortByOption, pageNumber, query }
   // debounced params state
   const [currentParams, setCurrentParams] = useState(updatedParams)
@@ -32,23 +34,22 @@ const MapList = ({ query, sortByOption, setSortByOption, mapCategory, pageNumber
   }, [updatedParams])
 
   return (
-    <Box
-      overflow="hidden"
-      borderLeft="1px"
-      borderRight="1px"
-      borderBottom="1px"
-      borderBottomRadius={4}
-      borderColor={useColorModeValue("rgb(226, 232, 240)", "whiteAlpha.300")}
-      w="fit-content"
-      margin="auto"
-      bg="transparent"
-      p={4}
-      pb={6}
-    >
+    <Box overflow="hidden" margin="auto" p={4} pb={6}>
+      <Box width={"full"} position={"relative"} height={14}>
+        <Box position={"absolute"} left={"50%"} transform={"translateX(-50%)"}>
+          <CategoriesBar handleChooseCategory={handleChooseCategory} mapCategory={mapCategory}></CategoriesBar>
+        </Box>
+      </Box>
+
+      <Container maxW={"container.xl"} my={3}>
+        <Flex width={"full"} justifyContent={{ base: "center", md: "space-between" }} flexWrap={"wrap"} rowGap={6}>
+          <SearchSection query={query} setQuery={setQuery} />
+          <SortRadioButton sortByOption={sortByOption} setSortByOption={setSortByOption} />
+        </Flex>
+      </Container>
+
       <Container centerContent p={4}>
-        <SortRadioButton sortByOption={sortByOption} setSortByOption={setSortByOption} />
         {query && <span>showing search for "{query}"</span>}
-        <br></br>
         {data && <span>{data.totalMaps} maps found</span>}
         {isLoading && <span>Loading...</span>}
         {isError && <span>Error Loading</span>}
@@ -70,6 +71,7 @@ const MapList = ({ query, sortByOption, setSortByOption, mapCategory, pageNumber
         w="fit-content"
         mx="auto"
       >
+        {isLoading && Array.from({ length: 3 }, (_, index) => <Skeleton key={index} height="302px" borderRadius={"md"} />)}
         {!isLoading && isSuccess && data && data.maps.map((map) => <MapItem key={map._id} map={map} />)}
       </SimpleGrid>
       <PagesNavigation

@@ -1,5 +1,5 @@
-import React, {useRef, useContext} from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef, useContext } from "react"
+import { Link } from "react-router-dom"
 import {
   Box,
   Flex,
@@ -16,36 +16,38 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react"
 
-import {
-    Drawer,
-    DrawerBody,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    useColorMode
-  } from '@chakra-ui/react'
+import { Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useColorMode } from "@chakra-ui/react"
 
-  
-import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
-import NavLinks from './NavLinks';
-import MainHeader from './MainHeader';
+import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons"
+import NavLinks from "./NavLinks"
+import MainHeader from "./MainHeader"
 
-import { AuthContext } from '../../context/authContext'
+import { AuthContext } from "../../context/authContext"
 
-
-
-const Navbar = ({isLoading}) => {
+const Navbar = ({ isLoading }) => {
   const auth = useContext(AuthContext)
   const { colorMode, toggleColorMode } = useColorMode()
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
 
   return (
     <>
-      <MainHeader as="header" bg={useColorModeValue("gray.100", "gray.900")} px={4} position={"fixed"} top={0} left={0} w={"100%"} zIndex={5} background={useColorModeValue("linear-gradient(180deg, rgba(237,253,253,1) 0%, rgba(255,255,255,1) 100%)", "linear-gradient(180deg, rgba(47,50,50,1) 0%, #1A202C 75%)")}>
+      <MainHeader
+        as="header"
+        // bg={useColorModeValue("#2e2e2e", "gray.900")}
+        bg={"transparent"}
+        px={4}
+        position={"fixed"}
+        top={0}
+        left={0}
+        width={"100%"}
+        // left={{ sm: 0, md: "50%" }}
+        // transform={{ sm: "", md: "translateX(-50%)" }}
+        // width={{ base: "100%", md: "auto" }}
+        zIndex={5}
+      >
         <Flex h={14} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}
@@ -55,71 +57,80 @@ const Navbar = ({isLoading}) => {
             onClick={isOpen ? onClose : onOpen}
             ref={btnRef}
           />
-          <HStack spacing={8} alignItems={"center"}>
-            <Heading size='lg' fontSize="25px" ml={{sm:"40px" , xl:"400px"}} textTransform="none" whiteSpace="nowrap" bgGradient='linear(to-l, #7928CA, #FF0080)' bgClip='text' py={4} >
-              <Link to="/">Fall Guys Maps</Link>
-            </Heading>
-            <HStack
-              as={"nav"}
-              spacing={4}
-              display={{ base: "none", md: "flex" }}
+          <Box bgColor={"#2e2e2e"} borderRadius={"lg"}>
+            <Heading
+              size="lg"
+              fontSize="25px"
+              textTransform="none"
+              whiteSpace="nowrap"
+              bgGradient="linear(to-l, #7928CA, #FF0080)"
+              bgClip="text"
+              p={2}
             >
-              {!isLoading && <NavLinks/>}
-            </HStack>
-          </HStack>
-          <Button onClick={toggleColorMode}>
-              {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+              <Link to="/">Fall Guys Levels</Link>
+            </Heading>
+          </Box>
+          {!isLoading && (
+            <Box h={"full"} position="absolute" top="0" left="50%" transform="translate(-50%)" display={{ base: "none", md: "inline-flex" }}>
+              <HStack as={"nav"} h={"full"} spacing={4} display={"flex"} px={8} borderBottomRadius={"md"}>
+                <NavLinks />
+              </HStack>
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                right="0"
+                zIndex={-1}
+                height={0}
+                borderTop={"3.5rem solid #2e2e2e"} // Your desired color for the trapezoid
+                borderRight={"10px solid transparent"}
+                borderLeft={"10px solid transparent"}
+                borderBottomRightRadius={"15px 50px"}
+                borderBottomLeftRadius={"15px 50px"}
+              ></Box>
+            </Box>
+          )}
+
+          <HStack>
+            <Button onClick={toggleColorMode} bgColor={"#2e2e2e"} color={"white"} borderRadius={"full"}>
+              {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
-          {auth.isLoggedIn &&
-            <Flex alignItems={"center"}>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <Avatar
-                    size={"sm"}
-                    src={auth.userData.photo}
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>Add Map</MenuItem>
-                  <MenuDivider />
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
-            </Flex>
-          }
-          
+            {auth.isLoggedIn && (
+              <Flex alignItems={"center"}>
+                <Menu>
+                  <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
+                    <Avatar size={"sm"} src={auth.userData.photo} />
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem>Profile</MenuItem>
+                    <MenuItem>Add Map</MenuItem>
+                    <MenuDivider />
+                    <MenuItem>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              </Flex>
+            )}
+          </HStack>
         </Flex>
 
-        <Drawer
-          isOpen={isOpen}
-          placement="left"
-          onClose={onClose}
-          finalFocusRef={btnRef}
-        >
-          <DrawerOverlay display={{ md: "none" }}/>
+        <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
+          <DrawerOverlay display={{ md: "none" }} />
           <DrawerContent display={{ md: "none" }}>
             <DrawerCloseButton />
             <DrawerHeader>Menu</DrawerHeader>
 
             <DrawerBody>
-                <Box pb={4}>
-                    <Stack as={"nav"} spacing={4}>
-                        {!isLoading && <NavLinks closeDrawer={onClose} />}
-                    </Stack>
-                </Box>
+              <Box pb={4}>
+                <Stack as={"nav"} spacing={4}>
+                  {!isLoading && <NavLinks closeDrawer={onClose} />}
+                </Stack>
+              </Box>
             </DrawerBody>
           </DrawerContent>
         </Drawer>
       </MainHeader>
     </>
-  );
+  )
 }
 
 export default Navbar

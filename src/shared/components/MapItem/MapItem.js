@@ -24,6 +24,8 @@ import CardBodyInformation from "./components/CardBodyInformation"
 import LikeButton from "./components/LikeButton"
 import CardCarousel from "./components/CardCarousel"
 
+import queryClient from "../../react-query/queryClient"
+
 const cardHeight = "302px"
 
 const MapItem = ({ map }) => {
@@ -45,14 +47,18 @@ const MapItem = ({ map }) => {
     setCopied(false)
   }
 
+  const handleMapClick = () => {
+    queryClient.setQueryData(["map", map._id], map)
+  }
+
   return (
     <Box justifyContent="center" display="flex" alignItems="center" w="220px" maxW="220px" maxH={cardHeight} p={0}>
       <Card maxH={cardHeight} h={cardHeight} w="220px" maxW="220px">
         <CardBody p={0} h="260px">
-          <CardOverlay category={map.category} counter={likesCounter} mapLinkPath={mapLinkPath} />
+          <CardOverlay category={map.category} counter={likesCounter} mapLinkPath={mapLinkPath} handleMapClick={handleMapClick} />
           <Flex flexDirection="column" h="full" maxH="100%" overflow="hidden">
-            <CardCarousel images={map.images} mapLinkPath={mapLinkPath} />
-            <CardBodyInformation map={map} mapLinkPath={mapLinkPath} userLinkPath={userLinkPath} />
+            <CardCarousel images={map.images} mapLinkPath={mapLinkPath} handleMapClick={handleMapClick} />
+            <CardBodyInformation map={map} mapLinkPath={mapLinkPath} userLinkPath={userLinkPath} handleMapClick={handleMapClick} />
           </Flex>
         </CardBody>
         <Divider />

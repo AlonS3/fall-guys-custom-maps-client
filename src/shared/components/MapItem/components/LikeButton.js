@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { BiSolidCrown, BiCrown } from "react-icons/bi"
 import { Button, Icon, Box, useStyleConfig } from "@chakra-ui/react"
@@ -12,6 +12,11 @@ const LikeButton = ({ map, setLikesCounter }) => {
   const auth = useContext(AuthContext)
   const navigate = useNavigate()
   const [liked, setLiked] = useState(map.isLikedByCurrentUser)
+
+  // update the like state when the refetch the request
+  useEffect(() => {
+    setLiked(map.isLikedByCurrentUser)
+  }, [map])
 
   const { mutate, isLoading } = useMutation(({ likeAction }) => likeMap({ functionName: likeAction, mapId: map._id }), {
     // Optimistic update

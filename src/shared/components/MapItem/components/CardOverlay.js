@@ -12,9 +12,9 @@ function formatNumber(number) {
   return number.toString()
 }
 
-const CardOverlay = ({ category, counter, mapLinkPath }) => {
+const CardOverlay = ({ category, counter, mapLinkPath, handleMapClick }) => {
   return (
-    <Link as={ReactRouterLink} to={mapLinkPath} color="teal.500">
+    <Link as={ReactRouterLink} to={mapLinkPath} color="teal.500" onClick={handleMapClick}>
       <Flex position="absolute" direction="row" justify="space-between" w="full" p={0} overflow="hidden" zIndex={2}>
         <Flex overflow="hidden" alignItems="center">
           <Text

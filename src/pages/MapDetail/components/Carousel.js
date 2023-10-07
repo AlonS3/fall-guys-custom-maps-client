@@ -1,9 +1,8 @@
 import React, { useState } from "react"
-import { Link as ReactRouterLink } from "react-router-dom"
-import { Box, Image, Link, IconButton, Text } from "@chakra-ui/react"
+import { Box, Image, IconButton, Text } from "@chakra-ui/react"
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl"
 
-const CardCarousel = ({ images, mapLinkPath, handleMapClick }) => {
+const Carousel = ({ images }) => {
   const [imageIndex, setImageIndex] = useState(0)
 
   const nextImage = () => {
@@ -26,7 +25,7 @@ const CardCarousel = ({ images, mapLinkPath, handleMapClick }) => {
     })
   }
   return (
-    <Box position="relative">
+    <Box position="relative" overflow={"hidden"} borderRadius={"lg"} border={"4px solid"}>
       <Text
         position={"absolute"}
         color={"whiteAlpha.900"}
@@ -34,7 +33,7 @@ const CardCarousel = ({ images, mapLinkPath, handleMapClick }) => {
         right={"0%"}
         transform={"translate(-0%, 0%)"}
         textShadow="lg"
-        fontSize={"xs"}
+        fontSize={"lg"}
         paddingRight={2}
         paddingBottom={1}
         fontWeight={"medium"}
@@ -77,20 +76,34 @@ const CardCarousel = ({ images, mapLinkPath, handleMapClick }) => {
       >
         <SlArrowRight />
       </IconButton>
-      <Link as={ReactRouterLink} to={mapLinkPath} color="teal.500" onClick={handleMapClick}>
-        <Image
-          width={220}
-          height={150}
-          objectFit="cover"
-          mx={"auto"}
-          src={images[imageIndex]}
-          alt="Green double couch with wooden legs"
-          borderTopRadius={6}
-          flexShrink={0}
-        />
-      </Link>
+      <Image
+        width={"auto"}
+        height={450}
+        objectFit="cover"
+        mx={"auto"}
+        src={images[imageIndex]}
+        alt="Green double couch with wooden legs"
+        flexShrink={0}
+      />
+      <Image
+        position="absolute"
+        left={"50%"}
+        top={"50%"}
+        width={"110%"}
+        height={"110%"}
+        maxH={"unset"}
+        maxW={"unset"}
+        transform={"translate(-50%, -50%)"}
+        zIndex={-1}
+        objectFit="cover"
+        mx={"auto"}
+        src={images[imageIndex]}
+        alt="Green double couch with wooden legs"
+        flexShrink={0}
+        filter={"blur(15px)"}
+      />
     </Box>
   )
 }
 
-export default CardCarousel
+export default Carousel

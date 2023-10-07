@@ -1,30 +1,52 @@
-import React, { useContext, useMemo, useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useQuery } from "react-query"
-import { getUserMaps } from "../../../api/backendApi"
-import { AuthContext } from "../../../shared/context/authContext"
-import { Box, useColorModeValue, Container, SimpleGrid } from "@chakra-ui/react"
+import { getMaps } from "../../../api/backendApi"
+import { Box, useColorModeValue, Container, SimpleGrid, Skeleton, Select, Input, Spacer, Flex } from "@chakra-ui/react"
 
 import MapItem from "../../../shared/components/MapItem/MapItem"
+import MapItemContainer from "../../../shared/components/MapItemContainer"
 
 import PagesNavigation from "../../../shared/components/PagesNavigation"
+import SortRadioButton from "../../../shared/components/SortRadioButton"
 
-const UserMaps = () => {
-  const auth = useContext(AuthContext)
-  let displayedMaps
+const categories = ["All", "Casual", "Art", "Challenge"]
+
+const UserMaps = ({ userId }) => {
+  const defaultCategory = "All"
+  const defaultSort = "Date"
+  const [mapCategory, setMapCategory] = useState(defaultCategory)
+  const [sortByOption, setSortByOption] = useState(defaultSort)
+  const [query, setQuery] = useState("")
   const [pageNumber, setPageNumber] = useState(1)
-  const mapsPerPage = 5 // Number of maps to display at once
 
-  const { data, isLoading, isError, isSuccess } = useQuery(["user-maps"], () => getUserMaps(auth.userData.id), {
-    cacheTime: 10000,
-    retry: false,
-  })
+  const updatedParams = { mapCategory, sortByOption, pageNumber, query }
+  // debounced params state
+  const [currentParams, setCurrentParams] = useState(updatedParams)
 
-  if (data) {
-    const currentElement = (pageNumber - 1) * mapsPerPage
-    displayedMaps = data.maps.slice(currentElement, currentElement + mapsPerPage)
+  const { isLoading, isError, isSuccess, data } = useQuery(
+    ["user-maps", userId, currentParams],
+    ({ signal }) => getMaps(signal, mapCategory, sortByOption, pageNumber, query, userId),
+    {
+      cacheTime: 10000,
+      retry: false,
+    }
+  )
+
+  // debouncing the params
+  useEffect(() => {
+    if (JSON.stringify(updatedParams) !== JSON.stringify(currentParams)) {
+      const timerId = setTimeout(() => setCurrentParams(updatedParams), 1000)
+      return () => clearTimeout(timerId)
+    }
+  }, [updatedParams])
+
+  const categoryChange = (e) => {
+    setMapCategory(e.target.value)
   }
 
-  const numberOfPages = data && data.maps.length ? Math.ceil(data.maps.length / mapsPerPage) : 1
+  const queryChange = (e) => {
+    setQuery(e.target.value)
+  }
 
   return (
     <Box
@@ -40,8 +62,23 @@ const UserMaps = () => {
       p={4}
       pb={6}
     >
+      <Flex flexWrap={"wrap"} justifyContent={{ base: "center", sm: "space-between" }} alignItems="center" columnGap={6} rowGap={2}>
+        <Select size={"sm"} width={"fit-content"} borderRadius={"md"} value={mapCategory} onChange={categoryChange}>
+          {categories.map((option, index) => (
+            <option key={index} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
+        <Box>
+          <SortRadioButton sortByOption={sortByOption} setSortByOption={setSortByOption} />
+        </Box>
+        <Input value={query} onChange={queryChange} placeholder="Search" size="sm" width={36} borderRadius={"md"} />
+      </Flex>
+
       <Container centerContent p={4}>
-        {data && <span>{data.maps.length} maps found</span>}
+        {query && <span>showing search for "{query}"</span>}
+        {data && <span>{data.totalMaps} maps found</span>}
         {isLoading && <span>Loading...</span>}
         {isError && <span>Error Loading</span>}
       </Container>
@@ -62,9 +99,22 @@ const UserMaps = () => {
         w="fit-content"
         mx="auto"
       >
-        {!isLoading && isSuccess && data && displayedMaps.map((map, index) => <MapItem key={index} map={map} />)}
+        {isLoading && Array.from({ length: 3 }, (_, index) => <Skeleton key={index} height="302px" borderRadius={"md"} />)}
+        {!isLoading &&
+          isSuccess &&
+          data &&
+          data.maps.map((map) => (
+            <MapItemContainer key={map._id} mapId={map._id}>
+              <MapItem key={map._id} map={map} />
+            </MapItemContainer>
+          ))}
       </SimpleGrid>
-      <PagesNavigation setPageNumber={setPageNumber} pageNumber={pageNumber} totalPages={numberOfPages} hasNextPage={pageNumber < numberOfPages} />
+      <PagesNavigation
+        setPageNumber={setPageNumber}
+        pageNumber={pageNumber}
+        totalPages={data?.totalPages ?? 1}
+        hasNextPage={data?.hasNextPage ?? false}
+      />
     </Box>
   )
 }

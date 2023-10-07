@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react'
-import { Tabs, TabList, Tab, Text } from '@chakra-ui/react'
+import React, { useState, useEffect } from "react"
+import { Tabs, TabList, Tab, TabIndicator, useColorModeValue } from "@chakra-ui/react"
 
+const categories = ["All", "Casual", "Art", "Challenge"]
 
-const categories = ['All', 'Casual', 'Art', 'Challenge'];
-
-export default function CategoriesBar({handleChooseCategory, mapCategory}) {
+export default function CategoriesBar({ handleChooseCategory, mapCategory }) {
   const [tabIndex, setTabIndex] = useState(0)
   useEffect(() => {
     const index = categories.indexOf(mapCategory)
@@ -13,18 +12,20 @@ export default function CategoriesBar({handleChooseCategory, mapCategory}) {
 
   const tabChangeHandler = (index) => {
     setTabIndex(index)
-    handleChooseCategory(categories[index]);
+    handleChooseCategory(categories[index])
   }
 
   return (
     <>
-      <Text as={"h3"} textAlign="center" fontSize="xl" fontWeight="medium" mt="20px">Categories</Text>
-      <Tabs align='center' variant='enclosed' mt="20px" size="lg" mb="1px" onChange={tabChangeHandler} index={tabIndex}>
+      <Tabs variant="unstyled" size="lg" onChange={tabChangeHandler} index={tabIndex}>
         <TabList>
           {categories.map((category, index) => (
-              <Tab key={index}>{category}</Tab>
-            ))}
+            <Tab key={index} fontSize={"x-large"} fontWeight={"medium"} p={0} mx={3} my={1}>
+              {category}
+            </Tab>
+          ))}
         </TabList>
+        <TabIndicator mt="-3.5px" height="3px" bg={"var(--chakra-colors-chakra-body-text)"} borderRadius="3px" />
       </Tabs>
     </>
   )

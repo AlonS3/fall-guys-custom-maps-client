@@ -45,13 +45,14 @@ const sortObjectMap = {
   Date: "dateAdded",
 }
 
-export const getMaps = async (signal, category, sort, page, query) => {
+export const getMaps = async (signal, category, sort, page, query, userId) => {
   const response = await backendApi.get("/api/public/maps", {
     params: {
       category,
       page,
       query,
       sort: sortObjectMap[sort],
+      userId,
     },
     withCredentials: true,
     signal,

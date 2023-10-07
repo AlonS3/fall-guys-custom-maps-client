@@ -1,6 +1,7 @@
 import React from "react"
 
-import { Stack, Avatar, Heading, Button, Spacer, Skeleton, Text } from "@chakra-ui/react"
+import { Stack, Avatar, Heading, Button, Spacer, Skeleton, Text, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react"
+import { ChevronDownIcon } from "@chakra-ui/icons"
 
 import useGetUserProfileInfo from "../../../shared/hooks/useGetUserProfileInfo"
 
@@ -13,6 +14,10 @@ const PrivateInfoBody = () => {
         Error fetching data
       </Text>
     )
+
+  const updateInfoClickHandler = () => {
+    window.open(process.env.REACT_APP_BACKEND_URL + "/api/user/auth/google/update", "_self")
+  }
 
   return (
     <Stack direction={["column", "column", "row"]} alignItems={"center"}>
@@ -29,10 +34,15 @@ const PrivateInfoBody = () => {
         </Skeleton>
       </Stack>
       <Spacer />
-      <Stack direction={"column"} alignItems={"center"}>
-        <Button>Update Info</Button>
-        <Button>Delete Account</Button>
-      </Stack>
+      <Menu>
+        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          Actions
+        </MenuButton>
+        <MenuList>
+          <MenuItem onClick={updateInfoClickHandler}>Update Info</MenuItem>
+          <MenuItem>Delete Account</MenuItem>
+        </MenuList>
+      </Menu>
     </Stack>
   )
 }
